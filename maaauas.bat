@@ -79,6 +79,7 @@ if %updateFlag% == 1 (
     echo 复制新的resource目录...
     echo Copying new resource directory...
     xcopy "%repo_dir%\resource" "%script_dir%\resource" /E /I /R /Y > nul
+    xcopy "%repo_dir%\cache" "%script_dir%\cache" /E /I /R /Y > nul
     echo 更新完成。
     echo Update completed.
 ) else (
