@@ -1,156 +1,153 @@
-@echo off
+ï»¿@echo off
 setlocal
+chcp 65001 >nul
+@echo off
 
-@REM encoding:GBK
-
-@REM Èç¹ûÖÐÎÄÂÒÂë,ÇëÐÞ¸Ä±àÂë¸ñÊ½
-@REM If Chinese characters are garbled, please modify the encoding format
-
-@REM ½«½Å±¾·ÅÖÃÔÚMAA¸ùÄ¿Â¼ÏÂÆô¶¯»á×Ô¶¯¼ì²â¸üÐÂ×ÊÔ´²¢Æô¶¯MAA
+@REM å°†è„šæœ¬æ”¾ç½®åœ¨MAAæ ¹ç›®å½•ä¸‹å¯åŠ¨ä¼šè‡ªåŠ¨æ£€æµ‹æ›´æ–°èµ„æºå¹¶å¯åŠ¨MAA
 @REM Place the script in the MAA root directory to automatically detect resource updates and start MAA
-@REM Ê¹ÓÃÇ°ÇëÏÈÈ·±£ÄãÕýÈ·ÅäÖÃÁËgit»·¾³
+@REM ä½¿ç”¨å‰è¯·å…ˆç¡®ä¿ä½ æ­£ç¡®é…ç½®äº†gitçŽ¯å¢ƒ
 @REM Before using, ensure that the git environment is correctly configured
 
-@REM ÉèÖÃ×ÊÔ´¸üÐÂgit²Ö¿âµØÖ·
+@REM è®¾ç½®èµ„æºæ›´æ–°gitä»“åº“åœ°å€
 @REM Set the resource update git repository address
 set "git_repo=https://github.com/MaaAssistantArknights/MaaResource.git"
 
 :start_main
 
-echo git²Ö¿âµØÖ·:%git_repo%
+echo gitä»“åº“åœ°å€:%git_repo%
 echo Git repository address: %git_repo%
 
 set updateFlag=0
 set errMsg_CN=.
 set errMsg_EN=.
 
-@REM »ñÈ¡½Å±¾ËùÔÚÄ¿Â¼
+@REM èŽ·å–è„šæœ¬æ‰€åœ¨ç›®å½•
 @REM Get the directory where the script is located
 set "script_dir=%~dp0"
-echo ½Å±¾ËùÔÚÎ»ÖÃ:%script_dir%
+echo è„šæœ¬æ‰€åœ¨ä½ç½®:%script_dir%
 echo Script location: %script_dir%
 
-@REM ¶¨Òå²Ö¿âÄ¿Â¼
+@REM å®šä¹‰ä»“åº“ç›®å½•
 @REM Define the repository directory
 set "repo_dir=%script_dir%updateResourceCache"
-echo ±¾µØ²Ö¿âÄ¿Â¼:%repo_dir%
+echo æœ¬åœ°ä»“åº“ç›®å½•:%repo_dir%
 echo Local repository directory: %repo_dir%
 
-@REM ¼ì²éÊÇ·ñ´æÔÚgit»·¾³
+@REM æ£€æŸ¥æ˜¯å¦å­˜åœ¨gitçŽ¯å¢ƒ
 @REM Check if there is a git environment
 git --version
 if %errorlevel% neq 0 (
     cls
     echo.
-    echo === Ï²±¨ ===
+    echo === å–œæŠ¥ ===
     echo.
-    echo ÎÞ·¨Ê¹ÓÃgitÃüÁî
-    echo Çë¼ì²égitÊÇ·ñÒÑ°²×°ÇÒÌí¼Óµ½»·¾³±äÁ¿ÖÐ
+    echo æ— æ³•ä½¿ç”¨gitå‘½ä»¤
+    echo è¯·æ£€æŸ¥gitæ˜¯å¦å·²å®‰è£…ä¸”æ·»åŠ åˆ°çŽ¯å¢ƒå˜é‡ä¸­
     echo Cannot use git command
     echo Please check if git is installed and git is added to the environment variables.
-    set "errMsg_CN=ÎÞ·¨Ê¹ÓÃgitÃüÁî"
+    set "errMsg_CN=æ— æ³•ä½¿ç”¨gitå‘½ä»¤"
     set "errMsg_EN=Cannot use git command"
     goto end_error
 )
 
-@REM ¼ì²éÊÇ·ñ´æÔÚ./MAA
+@REM æ£€æŸ¥æ˜¯å¦å­˜åœ¨./MAA
 @REM Check if there is ./MAA
 if not exist "%script_dir%\MAA.exe" (
     cls
     echo.
-    echo === Ï²±¨ ===
+    echo === å–œæŠ¥ ===
     echo.
-    echo ÎÞ·¨ÕÒµ½MAA.exe
-    echo Çë½«½Å±¾·ÅÖÃÔÚMAA¸ùÄ¿Â¼ÏÂ
+    echo æ— æ³•æ‰¾åˆ°MAA.exe
+    echo è¯·å°†è„šæœ¬æ”¾ç½®åœ¨MAAæ ¹ç›®å½•ä¸‹
     echo Cannot find MAA.exe
     echo Please place the script in the MAA root directory.
-    set "errMsg_CN=ÎÞ·¨ÕÒµ½MAA.exe"
+    set "errMsg_CN=æ— æ³•æ‰¾åˆ°MAA.exe"
     set "errMsg_EN=Cannot find MAA.exe"
     goto end_error
 )
 
 
-@REM ¼ì²é²Ö¿âÄ¿Â¼ÊÇ·ñ´æÔÚ
+@REM æ£€æŸ¥ä»“åº“ç›®å½•æ˜¯å¦å­˜åœ¨
 @REM Check if the repository directory exists
 if not exist "%repo_dir%" (
-    echo ²Ö¿âÄ¿Â¼²»´æÔÚ£¬¿ªÊ¼¿ËÂ¡...
+    echo ä»“åº“ç›®å½•ä¸å­˜åœ¨ï¼Œå¼€å§‹å…‹éš†...
     echo Repository directory does not exist, starting clone...
     git clone "%git_repo%" "%repo_dir%"
     if errorlevel 1 (
-        set "errMsg_CN=¿ËÂ¡Ê§°Ü£¬ÍË³ö½Å±¾¡£"
+        set "errMsg_CN=å…‹éš†å¤±è´¥ï¼Œé€€å‡ºè„šæœ¬ã€‚"
         set "errMsg_EN=Clone failed, exiting script."
         goto end_error
     )
     set updateFlag=1
-    echo ¿ËÂ¡Íê³É¡£
+    echo å…‹éš†å®Œæˆã€‚
     echo Clone completed.
 ) else (
-    echo ²Ö¿âÄ¿Â¼ÒÑ´æÔÚ£¬¿ªÊ¼¼ì²é¸üÐÂ...
+    echo ä»“åº“ç›®å½•å·²å­˜åœ¨ï¼Œå¼€å§‹æ£€æŸ¥æ›´æ–°...
     echo Repository directory exists, starting update check...
     cd /d "%repo_dir%"
     git fetch origin
     if errorlevel 1 (
-        set "errMsg_CN=¼ì²é¸üÐÂÊ§°Ü£¬ÍË³ö½Å±¾¡£"
+        set "errMsg_CN=æ£€æŸ¥æ›´æ–°å¤±è´¥ï¼Œé€€å‡ºè„šæœ¬ã€‚"
         set "errMsg_EN=Update check failed, exiting script."
         goto end_error
     )
     git diff --quiet origin/main
     if errorlevel 1 (
-        echo ÓÐ¸üÐÂ£¬¿ªÊ¼À­È¡...
+        echo æœ‰æ›´æ–°ï¼Œå¼€å§‹æ‹‰å–...
         echo Updates available, starting pull...
         git reset --hard origin/main
         if errorlevel 1 (
-            set "errMsg_CN=À­È¡Ê§°Ü£¬ÍË³ö½Å±¾¡£"
+            set "errMsg_CN=æ‹‰å–å¤±è´¥ï¼Œé€€å‡ºè„šæœ¬ã€‚"
             set "errMsg_EN=Pull failed, exiting script."
             goto end_error
         )
         set updateFlag=1
-        echo À­È¡Íê³É¡£
+        echo æ‹‰å–å®Œæˆã€‚
         echo Pull completed.
     ) else (
-        echo ÎÞ¸üÐÂ¡£
+        echo æ— æ›´æ–°ã€‚
         echo No updates.
     )
 )
 
-@REM ·µ»Ø½Å±¾ËùÔÚÄ¿Â¼
+@REM è¿”å›žè„šæœ¬æ‰€åœ¨ç›®å½•
 @REM Return to the script's directory
 cd /d "%script_dir%"
 
-@REM ¼ì²éÊÇ·ñÓÐ¸üÐÂ£¨°üÀ¨Ê×´Î¿ËÂ¡£©
+@REM æ£€æŸ¥æ˜¯å¦æœ‰æ›´æ–°ï¼ˆåŒ…æ‹¬é¦–æ¬¡å…‹éš†ï¼‰
 @REM Check if there are updates (including the initial clone)
 if %updateFlag% == 1 (
-    echo ¸´ÖÆÐÂµÄresourceÄ¿Â¼...
+    echo å¤åˆ¶æ–°çš„resourceç›®å½•...
     echo Copying new resource directory...
     xcopy "%repo_dir%\resource" "%script_dir%\resource" /E /I /R /Y > nul
     xcopy "%repo_dir%\cache" "%script_dir%\cache" /E /I /R /Y > nul
-    echo ¸üÐÂÍê³É¡£
+    echo æ›´æ–°å®Œæˆã€‚
     echo Update completed.
 ) else (
-    echo Ã»ÓÐ¸üÐÂ
+    echo æ²¡æœ‰æ›´æ–°
     echo No updates.
 )
 
 endlocal
 
-echo Æô¶¯MAA
+echo å¯åŠ¨MAA
 echo Launching MAA
 start ./MAA
 goto end
 
 :end
-@REM ÑÓ³ÙÈýÃëºóÍË³ö
+@REM å»¶è¿Ÿä¸‰ç§’åŽé€€å‡º
 @REM Delay for 3 seconds before exiting
 timeout /t 3 /nobreak >nul
 exit
 
 :end_error
-@REM ³öÏÖ´íÎó,°´ÈÎÒâ¼üÍË³ö
+@REM å‡ºçŽ°é”™è¯¯,æŒ‰ä»»æ„é”®é€€å‡º
 color 0C
 echo.
-echo === ¥¨¥í°kÉú! ===
+echo === ã‚¨ãƒ­ç™ºç”Ÿ! ===
 echo.
-@REM Èç¹ûerrMsgÎª.,Êä³ö
+@REM å¦‚æžœerrMsgä¸º.,è¾“å‡º
 if "%errMsg_CN%"=="." (
     echo.
 ) else (
@@ -163,7 +160,7 @@ if "%errMsg_EN%"=="." (
     echo %errMsg_EN%
 )
 echo.
-echo ³öÏÖ´íÎó,°´ÈÎÒâ¼üÍË³ö
+echo å‡ºçŽ°é”™è¯¯,æŒ‰ä»»æ„é”®é€€å‡º
 echo An error occurred, press any key to exit
 pause >nul
 exit
