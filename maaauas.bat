@@ -7,6 +7,7 @@ chcp 65001 >nul
 @REM Place the script in the MAA root directory to automatically detect resource updates and start MAA
 @REM 使用前请先确保你正确配置了git环境
 @REM Before using, ensure that the git environment is correctly configured
+@REM DEMO Vidio: https://www.acfun.cn/v/ac47131724
 
 @REM 设置资源更新git仓库地址
 @REM Set the resource update git repository address
